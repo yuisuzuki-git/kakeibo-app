@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>詳細 - 家計簿</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body class="sub-page">
+  <div class="sub-card">
+    <h1>Item Detail</h1>
+
+    <ul>
+      <li><strong>Date:</strong> <%= item.createdAt.toISOString().slice(0,10) %></li>
+      <li><strong>Amount:</strong> <%= item.amount %> 円</li>
+      <li><strong>Category:</strong> <%= item.type === 'income' ? 'Income' : 'Expense' %></li>
+      <li><strong>Item name:</strong> <%= item.event %></li>
+      <li><strong>Memo:</strong> <%= item.memo %></li>
+    </ul>
+
+    <div style="margin-top: 16px;">
+      <a href="/items/edit/<%= item.id %>" class="btn-primary">Edit</a>
+
+      <form action="/items/delete/<%= item.id %>" method="post" style="display:inline;">
+        <button type="submit" class="btn-danger" onclick="return confirm('削除しますか？')">
+          Delete
+        </button>
+      </form>
+    </div>
+
+    <p class="back-link"><a href="/items">← Back to HOME</a></p>
+  </div>
+</body>
+</html>

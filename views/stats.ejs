@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Statistics - 家計簿</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="items-page">
+  <div class="home-wrapper">
+    <!-- 左サイドバー（HOMEと合わせる） -->
+    <aside class="home-sidebar">
+      <div class="home-sidebar-top">
+        <div class="home-logo">HOME</div>
+      </div>
+      <div class="home-sidebar-bottom">
+        <a href="/items">Dashboard</a>
+        <a href="/items/stats">Stats</a>
+        <a href="/logout">Logout</a>
+      </div>
+    </aside>
+
+    <!-- 右メイン -->
+    <main class="home-main">
+      <header class="home-header">
+        <h1>Statistics</h1>
+        <p class="home-subtitle">
+          Check daily income and expense as a chart.
+        </p>
+      </header>
+
+      <section class="card stats-card">
+        <h2>Income / Expense by Date</h2>
+        <canvas id="incomeExpenseChart"></canvas>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // ルートから渡されたデータ（そのままJSの配列にする）
+    const labels = <%- labels %>;
+    const incomeData = <%- incomeData %>;
+    const expenseData = <%- expenseData %>;
+
+    const ctx = document.getElementById('incomeExpenseChart').getContext('2d');
+
+    new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Income',
+        data: incomeData,
+        backgroundColor: 'rgba(34, 197, 94, 0.5)',
+        borderColor: 'rgba(34, 197, 94, 1)',
+        borderWidth: 1,
+      },
+      {
+        label: 'Expense',
+        data: expenseData,
+        backgroundColor: 'rgba(239, 68, 68, 0.5)',
+        borderColor: 'rgba(239, 68, 68, 1)',
+        borderWidth: 1,
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        bottom: 20,   // 下側に少し余白を足して軸ラベルが切れないように
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
+});
+
+  </script>
+</body>
+</html>

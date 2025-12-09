@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>家計簿</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body class="items-page">
+  <div class="home-wrapper">
+    <!-- 左サイドバー -->
+    <aside class="home-sidebar">
+      <div class="home-sidebar-top">
+        <div class="home-logo">HOME</div>
+      </div>
+      <div class="home-sidebar-bottom">
+        <a href="/items">Dashboard</a>
+        <a href="/items/stats">Stats</a>
+        <a href="/logout">Logout</a>
+      </div>
+    </aside>
+
+    <!-- 右メイン -->
+    <main class="home-main">
+      <!-- タイトル -->
+      <header class="home-header">
+        <h1>Household Account Book</h1>
+        <p class="home-subtitle">
+          Track your income and expenses at a glance.
+        </p>
+      </header>
+
+      <!-- 3つのサマリーカード -->
+      <section class="summary-row">
+        <div class="summary-card summary-income">
+          <div class="label">INCOME</div>
+          <div class="value"><%= incomeTotal %>円</div>
+        </div>
+        <div class="summary-card summary-expense">
+          <div class="label">EXPENSE</div>
+          <div class="value"><%= expenseTotal %>円</div>
+        </div>
+        <div class="summary-card summary-balance">
+          <div class="label">BALANCE</div>
+          <div class="value"><%= balance %>円</div>
+        </div>
+      </section>
+
+      <!-- フィルタ -->
+      <section class="filters card">
+        <h2>Filter</h2>
+        <form method="get" action="/items">
+          <label>Category
+            <select name="type">
+              <option value="all" <%= type === 'all' ? 'selected' : '' %>>All</option>
+              <option value="income" <%= type === 'income' ? 'selected' : '' %>>Income only</option>
+              <option value="expense" <%= type === 'expense' ? 'selected' : '' %>>Expense only</option>
+            </select>
+          </label>
+
+          <label>From
+            <input type="date" name="from" value="<%= from %>">
+          </label>
+
+          <label>To
+            <input type="date" name="to" value="<%= to %>">
+          </label>
+
+          <button type="submit" class="btn-primary">Applicable</button>
+        </form>
+      </section>
+
+      <!-- 下段：左に一覧、右に新規追加カード -->
+      <section class="home-bottom">
+        <!-- 収支一覧 -->
+        <section class="list card">
+          <h2>Income and expenditure list</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>DATE</th>
+                <th>AMOUNT</th>
+                <th>CATEGORY</th>
+                <th>ITEM NAME</th>
+                <th>MEMO</th>
+                <th>EDIT</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% items.forEach(function(item) { %>
+                <tr>
+                  <td><%= item.createdAt.toISOString().slice(0,10) %></td>
+                  <td><%= item.amount %>円</td>
+                  <td><%= item.type === 'income' ? 'Income' : 'Expense' %></td>
+                  <td>
+                    <a href="/items/detail?id=<%= item.id %>">
+                      <%= item.event %>
+                    </a>
+                  </td>
+                  <td><%= item.memo || '' %></td>
+                  <td>
+                    <a href="/items/edit/<%= item.id %>">Edit</a>
+                    <form method="post" action="/items/delete/<%= item.id %>" style="display:inline;">
+                      <button type="submit" class="btn-danger" onclick="return confirm('削除しますか？')">
+                        Delete
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 新しい収支を追加 -->
+        <section class="new-item card">
+          <h2>Add New Item</h2>
+          <form method="post" action="/items">
+            <label>Amount
+              <input type="number" name="amount" required>
+            </label>
+
+            <label>Category
+              <select name="type" required>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+            </label>
+
+            <label>Item name
+              <input type="text" name="event">
+            </label>
+
+            <label>Memo
+              <input type="text" name="memo">
+            </label>
+
+            <button type="submit" class="btn-primary">addition</button>
+          </form>
+        </section>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

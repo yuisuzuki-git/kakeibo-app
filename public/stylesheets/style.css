@@ -1,0 +1,566 @@
+/* フォント読み込み（Noto Sans JP） */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+/* ------------------------------
+   カラーバリエーション・共通変数
+------------------------------ */
+:root {
+  --blue-bg: #1d4ed8;      /* 画面全体の青 */
+  --blue-deep: #1e3a8a;    /* 濃い青（ヘッダーなど） */
+  --card-bg: #ffffff;      /* カード */
+  --input-bg: #f3f4f6;     /* 入力欄の薄いグレー */
+  --text-main: #111827;
+  --text-sub: #6b7280;
+  --danger: #ef4444;
+  --border: #e5e7eb;
+  --radius-lg: 18px;
+  --radius-md: 10px;
+  --shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.18);
+  --shadow-light: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+/* ------------------------------
+   ベーススタイル
+------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Noto Sans JP', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+  background-color: var(--blue-bg);
+  color: var(--text-main);
+}
+
+/* aタグ */
+a {
+  color: #eef2ff;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* ボタン共通 */
+button,
+.btn-primary {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: #ffffff;
+  color: var(--blue-deep);
+  box-shadow: var(--shadow-light);
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out,
+    background-color 0.15s ease-out, color 0.15s ease-out;
+}
+
+button:hover,
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.22);
+  background: #e0ebff;
+}
+
+button:active,
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-light);
+}
+
+/* 危険系ボタン（削除など） */
+.btn-danger {
+  background: #fee2e2;
+  color: #b91c1c;
+  box-shadow: none;
+}
+.btn-danger:hover {
+  background: #fecaca;
+  box-shadow: 0 10px 22px rgba(248, 113, 113, 0.4);
+}
+
+/* 入力系 */
+input,
+select {
+  font-family: inherit;
+}
+
+/* ------------------------------
+   認証ページ（ログイン・新規登録）
+------------------------------ */
+body.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card-bg);
+  border-radius: 24px;
+  padding: 26px 26px 28px;
+  box-shadow: var(--shadow-soft);
+}
+
+.auth-card h1 {
+  margin: 0 0 6px;
+  font-size: 1.6rem;
+}
+
+.auth-card .subtitle {
+  margin: 0 0 20px;
+  font-size: 0.95rem;
+  color: var(--text-sub);
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-card label {
+  font-size: 0.82rem;
+  color: var(--text-sub);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.auth-card input[type="email"],
+.auth-card input[type="password"] {
+  padding: 9px 11px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  outline: none;
+  font-size: 0.9rem;
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out,
+    background-color 0.15s ease-out;
+}
+
+.auth-card input:focus {
+  border-color: #bfdbfe;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.8);
+}
+
+.auth-card .error {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+  color: var(--danger);
+}
+
+.auth-card .auth-footer {
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+.auth-card .auth-footer a {
+  color: var(--blue-deep);
+  font-weight: 500;
+}
+
+/* ------------------------------
+   メイン（家計簿）ページ
+------------------------------ */
+/* ------------------------------
+   メイン（家計簿）ページ
+------------------------------ */
+
+body.items-page {
+  min-height: 100vh;
+  background-color: var(--blue-bg);
+  color: var(--text-main);
+}
+
+/* 左サイドバー + 右コンテンツの2カラム */
+.home-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* 左の青いサイドバー */
+.home-sidebar {
+  width: 190px;
+  background: var(--blue-deep);
+  color: #e5e7eb;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.home-logo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.home-sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+
+.home-sidebar-bottom a {
+  color: #e5e7eb;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.home-sidebar-bottom a:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+/* 右側メイン */
+.home-main {
+  flex: 1;
+  padding: 24px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+/* 上部タイトル */
+.home-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+.home-subtitle {
+  margin: 4px 0 16px;
+  font-size: 0.9rem;
+  color: var(--text-sub);
+}
+
+/* 共通カード */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 16px 18px 18px;
+  margin-bottom: 18px;
+}
+
+/* 3つのサマリーカード */
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.summary-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 14px 14px 10px;
+  border: 1px solid #bfdbfe;
+  box-shadow: 0 10px 22px rgba(59, 130, 246, 0.2);
+}
+
+.summary-card .label {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-sub);
+}
+
+.summary-card .value {
+  margin-top: 4px;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.summary-income .value {
+  color: #16a34a;
+}
+.summary-expense .value {
+  color: #dc2626;
+}
+.summary-balance .value {
+  color: #2563eb;
+}
+
+/* フィルタカード */
+.filters.card h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+.filters form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: flex-end;
+}
+.filters label {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.filters select,
+.filters input[type="date"] {
+  padding: 7px 9px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  outline: none;
+  font-size: 0.9rem;
+}
+.filters select:focus,
+.filters input[type="date"]:focus {
+  border-color: #bfdbfe;
+  background: #ffffff;
+}
+
+/* 下段：左に一覧、右に新規追加カード */
+.home-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr);
+  gap: 18px;
+}
+
+/* 新しい収支を追加カード */
+.new-item.card h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+.new-item form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.new-item label {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.new-item input[type="number"],
+.new-item input[type="text"],
+.new-item select {
+  padding: 7px 9px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  outline: none;
+  font-size: 0.9rem;
+}
+.new-item input:focus,
+.new-item select:focus {
+  border-color: #bfdbfe;
+  background: #ffffff;
+}
+
+/* 一覧テーブルカード */
+.list.card {
+  padding-top: 12px;
+}
+.list.card h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+.list table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.list thead {
+  background: #eff6ff;
+}
+.list th,
+.list td {
+  padding: 9px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+.list th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-sub);
+}
+.list tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+.list tbody tr:hover {
+  background: #e0ebff;
+}
+.list a {
+  color: #2563eb;
+}
+.list td form {
+  display: inline-block;
+  margin-left: 4px;
+}
+
+/* レスポンシブ */
+@media (max-width: 960px) {
+  .home-bottom {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr);
+  }
+}
+
+@media (max-width: 780px) {
+  .home-wrapper {
+    flex-direction: column;
+  }
+  .home-sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+  }
+  .home-sidebar-bottom {
+    flex-direction: row;
+  }
+  .home-main {
+    padding: 16px;
+  }
+  .summary-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .home-bottom {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .list table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+/* 統計カード（グラフ用） */
+.stats-card {
+  min-height: 320px;
+}
+
+.stats-card canvas {
+  display: block;
+  max-width: 100%;
+  width: 100% !important;
+  height: 260px !important;  /* カード内に収まる固定高さ */
+  margin-top: 8px;
+}
+
+
+/* ------------------------------
+   編集ページ・詳細ページ・エラー
+------------------------------ */
+body.sub-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.sub-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+.sub-card h1 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.sub-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sub-card label {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sub-card input,
+.sub-card select {
+  padding: 7px 9px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  outline: none;
+}
+
+.sub-card input:focus,
+.sub-card select:focus {
+  border-color: #bfdbfe;
+  background: #ffffff;
+}
+
+.sub-card ul {
+  padding-left: 18px;
+  margin-top: 4px;
+}
+
+.sub-card .back-link {
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+/* 404 ページ用 */
+.error-404 {
+  text-align: center;
+}
+
+.error-404 .error-code {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--blue-deep);
+  margin-bottom: 4px;
+}
+
+.error-404 h1 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.error-404 .error-message {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  color: var(--text-sub);
+}
+
+.error-404 .error-detail {
+  margin: 0 0 18px;
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+.error-home-link {
+  margin-top: 6px;
+  display: inline-block;
+}

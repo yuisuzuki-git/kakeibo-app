@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ログイン - 家計簿</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <h1>Welcome Back!!</h1>
+    <p class="subtitle">We miss you! Log in and get started!</p>
+
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+
+    <form method="post" action="/login">
+      <label>メールアドレス
+        <input type="email" name="email" required>
+      </label>
+      <label>パスワード
+        <input type="password" name="password" required>
+      </label>
+      <button type="submit" class="btn-primary">Login</button>
+    </form>
+
+    <p class="auth-footer">
+      アカウントをお持ちでない方は
+      <a href="/register">Create new account</a>
+    </p>
+  </div>
+</body>
+</html>
