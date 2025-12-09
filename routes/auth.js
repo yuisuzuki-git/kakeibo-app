@@ -35,21 +35,34 @@ router.get('/login', function (req, res, next) {
 });
 
 // ログイン処理
-router.post('/login', async function (req, res, next) {
-  const prisma = req.prisma;
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email: email },
+    });
 
-  if (!user || user.password !== password) {
-    return res.render('login', { error: 'メールかパスワードが違います。' });
+    // ← ここが大事！
+    if (!user) {
+      return res.render("login", { error: "メールまたはパスワードが違います" });
+    }
+
+    // パスワードチェック
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) {
+      return res.render("login", { error: "メールまたはパスワードが違います" });
+    }
+
+    // ログイン成功
+    req.session.userId = user.id;
+    res.redirect("/home");
+  } catch (err) {
+    console.error(err);
+    return res.render("login", { error: "サーバーエラーが発生しました" });
   }
-
-  req.session.userId = user.id;
-  res.redirect('/items');
 });
+
 
 // ログアウト
 router.get('/logout', function (req, res, next) {
