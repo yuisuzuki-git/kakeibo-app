@@ -1,73 +1,116 @@
 // routes/auth.js
-var express = require('express');
+var express = require("express");
 var router = express.Router();
+const bcrypt = require("bcrypt");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
-// 新規登録ページ
-router.get('/register', function (req, res, next) {
-  res.render('register', { error: null });
-});
+/* ==========
+   GET /login
+   ========== */
+router.get("/login", function (req, res, next) {
+  const { error } = req.query;
+  let errorMessage = "";
 
-// 新規登録処理
-router.post('/register', async function (req, res, next) {
-  const prisma = req.prisma;
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.render('register', { error: 'メールとパスワードは必須です。' });
+  if (error === "server") {
+    errorMessage = "サーバーエラーが発生しました";
+  } else if (error === "invalid") {
+    errorMessage = "メールアドレスまたはパスワードが違います";
   }
 
+  res.render("login", { error: errorMessage });
+});
+
+/* ==============
+   GET /register
+   ============== */
+router.get("/register", function (req, res, next) {
+  const { error } = req.query;
+  let errorMessage = "";
+
+  if (error === "exists") {
+    errorMessage = "このメールアドレスは既に使われています。";
+  } else if (error === "server") {
+    errorMessage = "サーバーエラーが発生しました";
+  }
+
+  res.render("register", { error: errorMessage });
+});
+
+/* =================
+   POST /register
+   ================= */
+router.post("/register", async function (req, res, next) {
+  const { email, password } = req.body;
+
   try {
-    const user = await prisma.user.create({
-      data: { email, password },
+    // パスワードをハッシュ化
+    const hashed = await bcrypt.hash(password, 10);
+
+    // ユーザー作成（schema.prisma で passwordHash というカラム名にしている前提）
+    await prisma.user.create({
+      data: {
+        email,
+        passwordHash: hashed,
+      },
     });
-    // ログイン状態にする
-    req.session.userId = user.id;
-    res.redirect('/items');
+
+    // 登録できたらログイン画面へ
+    res.redirect("/login");
   } catch (err) {
-    console.log(err);
-    res.render('register', { error: 'このメールアドレスは既に使われています。' });
+    console.error("REGISTER ERROR:", err);
+
+    // 一意制約エラー（同じメールアドレスが既に存在）
+    if (err.code === "P2002") {
+      return res.redirect("/register?error=exists");
+    }
+
+    // それ以外はサーバーエラー扱い
+    return res.redirect("/register?error=server");
   }
 });
 
-// ログインページ
-router.get('/login', function (req, res, next) {
-  res.render('login', { error: null });
-});
-
-// ログイン処理
-router.post("/login", async (req, res) => {
+/* ==============
+   POST /login
+   ============== */
+router.post("/login", async function (req, res, next) {
   const { email, password } = req.body;
 
   try {
+    // メールアドレスでユーザー取得
     const user = await prisma.user.findUnique({
-      where: { email: email },
+      where: { email },
     });
 
-    // ← ここが大事！
+    // ユーザーが見つからない
     if (!user) {
-      return res.render("login", { error: "メールまたはパスワードが違います" });
+      return res.redirect("/login?error=invalid");
     }
 
-    // パスワードチェック
-    const ok = await bcrypt.compare(password, user.password);
+    // パスワード確認（passwordHash カラムと比較）
+    const ok = await bcrypt.compare(password, user.passwordHash);
+
     if (!ok) {
-      return res.render("login", { error: "メールまたはパスワードが違います" });
+      return res.redirect("/login?error=invalid");
     }
 
-    // ログイン成功
+    // ログイン成功 → セッションにユーザーIDを保存
     req.session.userId = user.id;
-    res.redirect("/home");
+
+    // 家計簿のメイン画面へ
+    res.redirect("/items");
   } catch (err) {
-    console.error(err);
-    return res.render("login", { error: "サーバーエラーが発生しました" });
+    console.error("LOGIN ERROR:", err);
+    return res.redirect("/login?error=server");
   }
 });
 
-
-// ログアウト
-router.get('/logout', function (req, res, next) {
+/* ==============
+   POST /logout
+   ============== */
+router.post("/logout", function (req, res, next) {
   req.session.destroy(() => {
-    res.redirect('/login');
+    res.redirect("/login");
   });
 });
 
